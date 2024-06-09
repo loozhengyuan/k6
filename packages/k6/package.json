@@ -1,0 +1,24 @@
+{
+  "name": "@loozhengyuan/k6",
+  "version": "0.0.0",
+  "bin": {
+    "k6": "./dist/run.js"
+  },
+  "scripts": {
+    "build": "tsc --build --force",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf ./node_modules/ ./dist/"
+  },
+  "optionalDependencies": {
+    "@loozhengyuan/k6-darwin-arm64": "0.0.0",
+    "@loozhengyuan/k6-darwin-x64": "0.0.0",
+    "@loozhengyuan/k6-linux-arm64": "0.0.0",
+    "@loozhengyuan/k6-linux-x64": "0.0.0",
+    "@loozhengyuan/k6-win32-x64": "0.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
+  }
+}

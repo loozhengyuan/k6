@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2022"],
+    "outDir": "./dist/"
+  },
+  "include": ["./src/**/*", "../../download.ts"],
+  "exclude": ["./node_modules/"]
+}

@@ -10,7 +10,9 @@
     "lint": "eslint --ignore-path .gitignore .",
     "lint:debug": "DEBUG=eslint:cli-engine npm run lint",
     "fmt": "prettier --write .",
-    "fmt:check": "prettier --check ."
+    "fmt:check": "prettier --check .",
+    "build": "npm run build --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.12.0",

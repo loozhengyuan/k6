@@ -1,0 +1,10 @@
+{
+  "name": "@loozhengyuan/k6-linux-arm64",
+  "version": "0.0.0",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ]
+}
