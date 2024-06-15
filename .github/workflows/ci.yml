@@ -51,8 +51,15 @@ jobs:
           npm run fmt:check
 
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 3
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-12
+          - windows-2022
+
     env:
       # NOTE: Dependabot updates will fail if `engine-strict`
       # is enabled so we explicitly enforce this in CI
@@ -86,6 +93,15 @@ jobs:
           registry=http://localhost:4873/
           //localhost:4873/:_authToken=fake
           EOF
+
+      # NOTE: Docker is not available in the GitHub Actions macOS runner
+      # image due to licensing issues so we use have to use `colima` instead
+      # https://github.com/actions/runner-images/issues/17#issuecomment-614726536
+      - name: Set up Docker
+        if: ${{ startsWith(matrix.os, 'macos-') }}
+        run: |
+          brew install docker docker-buildx docker-compose
+          colima start
 
       # NOTE: The `verdaccio` image can only be configured to allow
       # anonymous publish via config file and GH Actions service
