@@ -1,0 +1,26 @@
+services:
+  reg:
+    image: verdaccio/verdaccio:5.31.1
+    ports:
+      - '4873:4873/tcp'
+    # FIXME: Issues failing healthcheck in GitHub Actions
+    # healthcheck:
+    #   test: nc -v -z localhost 4873
+    #   interval: 3s
+    #   timeout: 10s
+    #   retries: 5
+    configs:
+      - source: verdaccio-config
+        target: /verdaccio/conf/config.yaml
+
+configs:
+  verdaccio-config:
+    # NOTE: The `$`-prefixed variables needed to be escaped
+    content: |
+      storage: /verdaccio/storage/data
+      packages:
+        '@*/*':
+          access: $$all
+          publish: $$all
+      max_body_size: 50mb
+      log: { type: stdout, format: pretty, level: http }

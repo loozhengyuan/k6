@@ -1,0 +1,130 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    # NOTE: Default option does not include `-o pipefail` as documented
+    # unless explicitly specifying the `bash` shell.
+    # https://github.com/actions/runner/issues/353
+    shell: bash
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    env:
+      # NOTE: Dependabot updates will fail if `engine-strict`
+      # is enabled so we explicitly enforce this in CI
+      # https://github.com/dependabot/dependabot-core/issues/4072
+      NPM_CONFIG_ENGINE_STRICT: 'true'
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4.1.2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # NOTE: Due to EBADPLATFORM bug affecting NPM workspaces,
+      # we use the `--force` flag to sidestep the warning
+      # https://github.com/npm/cli/issues/6138
+      - name: Install dependencies
+        run: |
+          npm ci --force
+
+      - name: Run linter checks
+        run: |
+          npm run lint
+
+      - name: Run formatting checks
+        run: |
+          npm run fmt:check
+
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    env:
+      # NOTE: Dependabot updates will fail if `engine-strict`
+      # is enabled so we explicitly enforce this in CI
+      # https://github.com/dependabot/dependabot-core/issues/4072
+      NPM_CONFIG_ENGINE_STRICT: 'true'
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4.1.2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # NOTE: Due to EBADPLATFORM bug affecting NPM workspaces,
+      # we use the `--force` flag to sidestep the warning
+      # https://github.com/npm/cli/issues/6138
+      - name: Install dependencies
+        run: |
+          npm ci --force
+
+      - name: Build packages
+        run: |
+          npm run build
+
+      - name: Prepare config for unauthenticated publish
+        run: |
+          cat <<EOF > .npmrc
+          registry=http://localhost:4873/
+          //localhost:4873/:_authToken=fake
+          EOF
+
+      # NOTE: The `verdaccio` image can only be configured to allow
+      # anonymous publish via config file and GH Actions service
+      # containers can only modify env vars so the alternative is to
+      # use Docker Compose to spin up service containers instead.
+      # https://docs.github.com/en/actions/using-containerized-services/about-service-containers
+      # https://stackoverflow.com/q/69852476
+      - name: Start service containers
+        run: |
+          docker compose up --force-recreate --wait
+
+      - name: Publish packages
+        run: |
+          npm publish --registry http://localhost:4873 --workspaces
+
+      - name: Set up test package
+        working-directory: ${{ runner.temp }}
+        run: |
+          npm init --yes
+
+      - name: Install packages
+        working-directory: ${{ runner.temp }}
+        run: |
+          npm install --verbose --registry http://localhost:4873 @loozhengyuan/k6
+
+      - name: Verify installation
+        working-directory: ${{ runner.temp }}
+        run: |
+          npx k6 version
+
+      - name: Export logs
+        if: ${{ !cancelled() }}
+        run: |
+          docker compose logs > app.log
+
+      - name: Upload logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: test-logs
+          path: app.log
+          retention-days: 3
