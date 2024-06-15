@@ -2,8 +2,11 @@
   "name": "@loozhengyuan/k6",
   "version": "0.0.0",
   "bin": {
-    "k6": "./dist/run.js"
+    "k6": "dist/run.js"
   },
+  "files": [
+    "./dist/"
+  ],
   "scripts": {
     "build": "tsc --build --force",
     "build:watch": "tsc --watch",
