@@ -1,4 +1,4 @@
-import os from 'node:os'
+import os = require('node:os')
 
 export const SUPPORTED_OS_ARCH: string[] = [
   'linux-x64',

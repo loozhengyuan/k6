@@ -4,6 +4,6 @@
     "lib": ["es2022"],
     "outDir": "./dist/"
   },
-  "include": ["./src/**/*", "../../download.ts"],
+  "include": ["./src/**/*"],
   "exclude": ["./node_modules/"]
 }
