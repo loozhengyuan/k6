@@ -213,7 +213,7 @@ jobs:
 
       - name: Install packages
         run: |
-          npm install --verbose --registry http://localhost:4873 @loozhengyuan/k6
+          npm install --verbose --registry http://localhost:4873 k6-cli
 
       - name: Verify installation
         run: |
