@@ -50,7 +50,9 @@ jobs:
         run: |
           npm run fmt:check
 
-  test:
+  build:
+    needs:
+      - lint
     runs-on: ubuntu-22.04
     timeout-minutes: 3
     env:
@@ -80,6 +82,105 @@ jobs:
         run: |
           npm run build
 
+      - name: Generate release tarball
+        run: |
+          npm pack --workspaces
+
+      # TODO: Consider using custom verdaccio image
+      - name: Upload local registry config
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: registry-config
+          path: docker-compose.yml
+          retention-days: 3
+
+      - name: Upload release tarball
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: release
+          path: loozhengyuan-k6-*.tgz
+          retention-days: 3
+
+  test-local-tarball:
+    needs:
+      - build
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 3
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-12
+          - macos-14 # ARM64
+          - windows-2022
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4.0.2
+
+      - name: Download release tarball
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: release
+
+      - name: Set up test package
+        run: |
+          npm init --yes
+
+      - name: Install base package
+        run: |
+          npm install loozhengyuan-k6-0.0.0.tgz
+
+      - name: Install optional package for Linux x64
+        if: ${{ runner.os == 'Linux' && runner.arch == 'x64' }}
+        run: |
+          npm install loozhengyuan-k6-linux-x64-0.0.0.tgz
+
+      - name: Install optional package for Linux ARM64
+        if: ${{ runner.os == 'Linux' && runner.arch == 'ARM64' }}
+        run: |
+          npm install loozhengyuan-k6-linux-arm64-0.0.0.tgz
+
+      - name: Install optional package for macOS x64
+        if: ${{ runner.os == 'macOS' && runner.arch == 'x64' }}
+        run: |
+          npm install loozhengyuan-k6-darwin-x64-0.0.0.tgz
+
+      - name: Install optional package for macOS ARM64
+        if: ${{ runner.os == 'macOS' && runner.arch == 'ARM64' }}
+        run: |
+          npm install loozhengyuan-k6-darwin-arm64-0.0.0.tgz
+
+      - name: Install optional package for Windows x64
+        if: ${{ runner.os == 'Windows' && runner.arch == 'x64' }}
+        run: |
+          npm install loozhengyuan-k6-win32-x64-0.0.0.tgz
+
+      - name: Verify installation
+        run: |
+          npx k6 version
+
+  test-local-registry:
+    needs:
+      - build
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4.0.2
+
+      - name: Download release tarball
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: release
+
+      # TODO: Consider using custom verdaccio image
+      - name: Download local registry config
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: registry-config
+
       - name: Prepare config for unauthenticated publish
         run: |
           cat <<EOF > .npmrc
@@ -99,32 +200,26 @@ jobs:
 
       - name: Publish packages
         run: |
-          npm publish --registry http://localhost:4873 --workspaces
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-0.0.0.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-x64-0.0.0.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-arm64-0.0.0.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-x64-0.0.0.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-arm64-0.0.0.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-win32-x64-0.0.0.tgz
 
       - name: Set up test package
-        working-directory: ${{ runner.temp }}
         run: |
           npm init --yes
 
       - name: Install packages
-        working-directory: ${{ runner.temp }}
         run: |
           npm install --verbose --registry http://localhost:4873 @loozhengyuan/k6
 
       - name: Verify installation
-        working-directory: ${{ runner.temp }}
         run: |
           npx k6 version
 
-      - name: Export logs
+      - name: Display logs
         if: ${{ !cancelled() }}
         run: |
-          docker compose logs > app.log
-
-      - name: Upload logs
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4.3.1
-        with:
-          name: test-logs
-          path: app.log
-          retention-days: 3
+          docker compose logs
