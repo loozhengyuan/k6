@@ -15,6 +15,9 @@ defaults:
     # https://github.com/actions/runner/issues/353
     shell: bash
 
+permissions:
+  id-token: write
+
 jobs:
   lint:
     runs-on: ubuntu-22.04
@@ -223,3 +226,35 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           docker compose logs
+
+  publish:
+    needs:
+      - test-local-tarball
+      - test-local-registry
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v4.0.2
+        with:
+          # Sets up .npmrc with `NODE_AUTH_TOKEN` token
+          registry-url: https://registry.npmjs.org/
+
+      - name: Download release tarball
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: release
+
+      # TODO: Remove dry run flag when ready
+      - name: Publish packages
+        if: ${{ github.ref == 'refs/heads/main' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish --provenance --access public --dry-run k6-cli-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-linux-x64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-linux-arm64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-darwin-x64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-darwin-arm64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-win32-x64-*.tgz
