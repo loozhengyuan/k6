@@ -252,9 +252,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm publish --provenance --access public --dry-run loozhengyuan-k6-0.0.0.tgz
-          npm publish --provenance --access public --dry-run loozhengyuan-k6-linux-x64-0.0.0.tgz
-          npm publish --provenance --access public --dry-run loozhengyuan-k6-linux-arm64-0.0.0.tgz
-          npm publish --provenance --access public --dry-run loozhengyuan-k6-darwin-x64-0.0.0.tgz
-          npm publish --provenance --access public --dry-run loozhengyuan-k6-darwin-arm64-0.0.0.tgz
-          npm publish --provenance --access public --dry-run loozhengyuan-k6-win32-x64-0.0.0.tgz
+          npm publish --provenance --access public --dry-run k6-cli-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-linux-x64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-linux-arm64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-darwin-x64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-darwin-arm64-*.tgz
+          npm publish --provenance --access public --dry-run loozhengyuan-k6-win32-x64-*.tgz
