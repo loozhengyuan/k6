@@ -22,5 +22,8 @@ configs:
         '@*/*':
           access: $$all
           publish: $$all
+        '**':
+          access: $$all
+          publish: $$all
       max_body_size: 50mb
       log: { type: stdout, format: pretty, level: http }
