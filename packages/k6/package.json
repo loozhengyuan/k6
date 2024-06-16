@@ -1,5 +1,5 @@
 {
-  "name": "@loozhengyuan/k6",
+  "name": "k6-cli",
   "version": "0.32.0-rc.0",
   "bin": {
     "k6": "dist/run.js"

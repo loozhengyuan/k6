@@ -98,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.1
         with:
           name: release
-          path: loozhengyuan-k6-*.tgz
+          path: '*.tgz'
           retention-days: 3
 
   test-local-tarball:
@@ -129,32 +129,32 @@ jobs:
 
       - name: Install base package
         run: |
-          npm install loozhengyuan-k6-0.0.0.tgz
+          npm install k6-cli-*.tgz
 
       - name: Install optional package for Linux x64
         if: ${{ runner.os == 'Linux' && runner.arch == 'x64' }}
         run: |
-          npm install loozhengyuan-k6-linux-x64-0.0.0.tgz
+          npm install loozhengyuan-k6-linux-x64-*.tgz
 
       - name: Install optional package for Linux ARM64
         if: ${{ runner.os == 'Linux' && runner.arch == 'ARM64' }}
         run: |
-          npm install loozhengyuan-k6-linux-arm64-0.0.0.tgz
+          npm install loozhengyuan-k6-linux-arm64-*.tgz
 
       - name: Install optional package for macOS x64
         if: ${{ runner.os == 'macOS' && runner.arch == 'x64' }}
         run: |
-          npm install loozhengyuan-k6-darwin-x64-0.0.0.tgz
+          npm install loozhengyuan-k6-darwin-x64-*.tgz
 
       - name: Install optional package for macOS ARM64
         if: ${{ runner.os == 'macOS' && runner.arch == 'ARM64' }}
         run: |
-          npm install loozhengyuan-k6-darwin-arm64-0.0.0.tgz
+          npm install loozhengyuan-k6-darwin-arm64-*.tgz
 
       - name: Install optional package for Windows x64
         if: ${{ runner.os == 'Windows' && runner.arch == 'x64' }}
         run: |
-          npm install loozhengyuan-k6-win32-x64-0.0.0.tgz
+          npm install loozhengyuan-k6-win32-x64-*.tgz
 
       - name: Verify installation
         run: |
@@ -200,12 +200,12 @@ jobs:
 
       - name: Publish packages
         run: |
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-0.0.0.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-x64-0.0.0.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-arm64-0.0.0.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-x64-0.0.0.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-arm64-0.0.0.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-win32-x64-0.0.0.tgz
+          npm publish --registry http://localhost:4873 k6-cli-*.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-x64-*.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-arm64-*.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-x64-*.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-arm64-*.tgz
+          npm publish --registry http://localhost:4873 loozhengyuan-k6-win32-x64-*.tgz
 
       - name: Set up test package
         run: |
