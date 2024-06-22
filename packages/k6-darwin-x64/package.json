@@ -1,6 +1,6 @@
 {
   "name": "@loozhengyuan/k6-darwin-x64",
-  "version": "0.32.0-rc.0",
+  "version": "0.0.0",
   "os": [
     "darwin"
   ],
