@@ -86,14 +86,6 @@ jobs:
         run: |
           npm pack --workspaces
 
-      # TODO: Consider using custom verdaccio image
-      - name: Upload local registry config
-        uses: actions/upload-artifact@v4.3.1
-        with:
-          name: registry-config
-          path: docker-compose.yml
-          retention-days: 3
-
       - name: Upload release tarball
         uses: actions/upload-artifact@v4.3.1
         with:
@@ -165,6 +157,14 @@ jobs:
       - build
     runs-on: ubuntu-22.04
     timeout-minutes: 3
+    services:
+      registry:
+        # NOTE: The `verdaccio/verdaccio` image can only be configured to allow
+        # unauthenticated publish via config file and GH Actions service containers
+        # can only modify by env vars so a custom image is used instead.
+        image: loozhengyuan/verdaccio:5.31.1-unsafe
+        ports:
+          - '4873:4873/tcp'
 
     steps:
       - name: Set up Node
@@ -175,12 +175,6 @@ jobs:
         with:
           name: release
 
-      # TODO: Consider using custom verdaccio image
-      - name: Download local registry config
-        uses: actions/download-artifact@v4.1.7
-        with:
-          name: registry-config
-
       - name: Prepare config for unauthenticated publish
         run: |
           cat <<EOF > .npmrc
@@ -188,24 +182,14 @@ jobs:
           //localhost:4873/:_authToken=fake
           EOF
 
-      # NOTE: The `verdaccio` image can only be configured to allow
-      # anonymous publish via config file and GH Actions service
-      # containers can only modify env vars so the alternative is to
-      # use Docker Compose to spin up service containers instead.
-      # https://docs.github.com/en/actions/using-containerized-services/about-service-containers
-      # https://stackoverflow.com/q/69852476
-      - name: Start service containers
-        run: |
-          docker compose up --force-recreate --wait
-
       - name: Publish packages
         run: |
-          npm publish --registry http://localhost:4873 k6-cli-*.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-x64-*.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-linux-arm64-*.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-x64-*.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-darwin-arm64-*.tgz
-          npm publish --registry http://localhost:4873 loozhengyuan-k6-win32-x64-*.tgz
+          npm publish k6-cli-*.tgz
+          npm publish loozhengyuan-k6-linux-x64-*.tgz
+          npm publish loozhengyuan-k6-linux-arm64-*.tgz
+          npm publish loozhengyuan-k6-darwin-x64-*.tgz
+          npm publish loozhengyuan-k6-darwin-arm64-*.tgz
+          npm publish loozhengyuan-k6-win32-x64-*.tgz
 
       - name: Set up test package
         run: |
@@ -213,13 +197,8 @@ jobs:
 
       - name: Install packages
         run: |
-          npm install --verbose --registry http://localhost:4873 k6-cli
+          npm install k6-cli
 
       - name: Verify installation
         run: |
           npx k6 version
-
-      - name: Display logs
-        if: ${{ !cancelled() }}
-        run: |
-          docker compose logs
