@@ -15,15 +15,16 @@ defaults:
     # https://github.com/actions/runner/issues/353
     shell: bash
 
+env:
+  # NOTE: Dependabot updates will fail if `engine-strict`
+  # is enabled so we explicitly enforce this in CI
+  # https://github.com/dependabot/dependabot-core/issues/4072
+  NPM_CONFIG_ENGINE_STRICT: 'true'
+
 jobs:
   lint:
     runs-on: ubuntu-22.04
     timeout-minutes: 3
-    env:
-      # NOTE: Dependabot updates will fail if `engine-strict`
-      # is enabled so we explicitly enforce this in CI
-      # https://github.com/dependabot/dependabot-core/issues/4072
-      NPM_CONFIG_ENGINE_STRICT: 'true'
 
     steps:
       - name: Checkout branch
@@ -55,11 +56,6 @@ jobs:
       - lint
     runs-on: ubuntu-22.04
     timeout-minutes: 3
-    env:
-      # NOTE: Dependabot updates will fail if `engine-strict`
-      # is enabled so we explicitly enforce this in CI
-      # https://github.com/dependabot/dependabot-core/issues/4072
-      NPM_CONFIG_ENGINE_STRICT: 'true'
 
     steps:
       - name: Checkout branch
