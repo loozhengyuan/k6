@@ -17,7 +17,7 @@ defaults:
 
 env:
   # NOTE: Dependabot updates will fail if `engine-strict`
-  # is enabled so we explicitly enforce this in CI
+  # is enabled in `.npmrc` so it is enforced via CI instead
   # https://github.com/dependabot/dependabot-core/issues/4072
   NPM_CONFIG_ENGINE_STRICT: 'true'
 
