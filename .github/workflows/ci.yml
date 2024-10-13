@@ -151,7 +151,7 @@ jobs:
   test-local-registry:
     needs:
       - build
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 3
     services:
       registry:
@@ -161,6 +161,13 @@ jobs:
         image: loozhengyuan/verdaccio:5.31.1-unsafe
         ports:
           - '4873:4873/tcp'
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-12
+          - macos-14 # ARM64
+          - windows-2022
 
     steps:
       - name: Set up Node

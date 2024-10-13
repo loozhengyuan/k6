@@ -72,4 +72,10 @@ rulesets:
             - integration_id: 15368
               context: test-local-tarball (windows-2022)
             - integration_id: 15368
-              context: test-local-registry
+              context: test-local-registry (ubuntu-22.04)
+            - integration_id: 15368
+              context: test-local-registry (macos-12)
+            - integration_id: 15368
+              context: test-local-registry (macos-14)
+            - integration_id: 15368
+              context: test-local-registry (windows-2022)
