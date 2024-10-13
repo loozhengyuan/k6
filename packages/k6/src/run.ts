@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import os = require('node:os')
-import child_process = require('node:child_process')
+import os from 'node:os'
+import path from 'node:path'
+import child_process from 'node:child_process'
 
 import { CURRENT_OS_ARCH, checkSupported } from './utils'
-import path from 'path'
 
 const getBinaryPath = () => {
   const moduleName = `@loozhengyuan/k6-${CURRENT_OS_ARCH}`
