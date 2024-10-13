@@ -64,12 +64,36 @@ rulesets:
             - integration_id: 15368
               context: build
             - integration_id: 15368
-              context: test-local-tarball (ubuntu-22.04)
+              context: test-local-tarball (ubuntu-22.04, lts/fermium)
             - integration_id: 15368
-              context: test-local-tarball (macos-12)
+              context: test-local-tarball (ubuntu-22.04, lts/gallium)
             - integration_id: 15368
-              context: test-local-tarball (macos-14)
+              context: test-local-tarball (ubuntu-22.04, lts/hydrogen)
             - integration_id: 15368
-              context: test-local-tarball (windows-2022)
+              context: test-local-tarball (ubuntu-22.04, lts/iron)
+            - integration_id: 15368
+              context: test-local-tarball (macos-12, lts/fermium)
+            - integration_id: 15368
+              context: test-local-tarball (macos-12, lts/gallium)
+            - integration_id: 15368
+              context: test-local-tarball (macos-12, lts/hydrogen)
+            - integration_id: 15368
+              context: test-local-tarball (macos-12, lts/iron)
+            - integration_id: 15368
+              context: test-local-tarball (macos-14, lts/fermium)
+            - integration_id: 15368
+              context: test-local-tarball (macos-14, lts/gallium)
+            - integration_id: 15368
+              context: test-local-tarball (macos-14, lts/hydrogen)
+            - integration_id: 15368
+              context: test-local-tarball (macos-14, lts/iron)
+            - integration_id: 15368
+              context: test-local-tarball (windows-2022, lts/fermium)
+            - integration_id: 15368
+              context: test-local-tarball (windows-2022, lts/gallium)
+            - integration_id: 15368
+              context: test-local-tarball (windows-2022, lts/hydrogen)
+            - integration_id: 15368
+              context: test-local-tarball (windows-2022, lts/iron)
             - integration_id: 15368
               context: test-local-registry
