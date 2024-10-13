@@ -51,7 +51,7 @@ rulesets:
     conditions:
       ref_name:
         include:
-          - "~DEFAULT_BRANCH"
+          - '~DEFAULT_BRANCH'
         exclude: []
     rules:
       - type: required_status_checks
