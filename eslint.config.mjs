@@ -28,8 +28,8 @@ export default [
     ],
   },
   eslint.configs.recommended,
-  // TODO: Switch to `strictTypeChecked` and enable `stylisticTypeChecked`
-  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   {
     languageOptions: {
       parserOptions: {
