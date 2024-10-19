@@ -23,7 +23,7 @@ env:
 
 jobs:
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
 
     steps:
@@ -54,7 +54,7 @@ jobs:
   build:
     needs:
       - lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
 
     steps:
@@ -97,8 +97,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-22.04
-          - macos-12
+          - ubuntu-24.04
+          - macos-14-large
           - macos-14 # ARM64
           - windows-2022
         node:
@@ -164,7 +164,7 @@ jobs:
   test-local-registry:
     needs:
       - build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     services:
       registry:
