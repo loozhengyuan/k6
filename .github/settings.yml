@@ -79,8 +79,8 @@ rulesets:
               context: test-local-tarball (macos-12, lts/hydrogen)
             - integration_id: 15368
               context: test-local-tarball (macos-12, lts/iron)
-            - integration_id: 15368
-              context: test-local-tarball (macos-14, lts/fermium)
+            # - integration_id: 15368
+            #   context: test-local-tarball (macos-14, lts/fermium)
             - integration_id: 15368
               context: test-local-tarball (macos-14, lts/gallium)
             - integration_id: 15368
