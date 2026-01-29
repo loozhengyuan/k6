@@ -101,7 +101,7 @@ jobs:
           # NOTE: `macos-15-intel` is the new label for x86_64 macOS runners
           # https://github.com/actions/runner-images/issues/13045
           - macos-15-intel
-          - macos-14 # ARM64
+          - macos-15 # ARM64
           - windows-2022
         node:
           # FIXME: `node:` prefix not working for Node 12
@@ -112,7 +112,7 @@ jobs:
           - lts/iron
         exclude:
           # ARM64 is only supported from lts/gallium
-          - os: macos-14
+          - os: macos-15
             node: lts/fermium
 
     steps:
