@@ -86,13 +86,13 @@ rulesets:
             - integration_id: 15368
               context: test-local-tarball (ubuntu-24.04, lts/iron)
             - integration_id: 15368
-              context: test-local-tarball (macos-13, lts/fermium)
+              context: test-local-tarball (macos-15-intel, lts/fermium)
             - integration_id: 15368
-              context: test-local-tarball (macos-13, lts/gallium)
+              context: test-local-tarball (macos-15-intel, lts/gallium)
             - integration_id: 15368
-              context: test-local-tarball (macos-13, lts/hydrogen)
+              context: test-local-tarball (macos-15-intel, lts/hydrogen)
             - integration_id: 15368
-              context: test-local-tarball (macos-13, lts/iron)
+              context: test-local-tarball (macos-15-intel, lts/iron)
             # - integration_id: 15368
             #   context: test-local-tarball (macos-14, lts/fermium)
             - integration_id: 15368
