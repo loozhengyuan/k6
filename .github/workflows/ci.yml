@@ -98,8 +98,8 @@ jobs:
       matrix:
         os:
           - ubuntu-24.04
-          - macos-13
-          - macos-14 # ARM64
+          - macos-15-intel
+          - macos-15 # ARM64
           - windows-2022
         node:
           # FIXME: `node:` prefix not working for Node 12
@@ -110,7 +110,7 @@ jobs:
           - lts/iron
         exclude:
           # ARM64 is only supported from lts/gallium
-          - os: macos-14
+          - os: macos-15
             node: lts/fermium
 
     steps:
